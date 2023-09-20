@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
 import StudentService from './../../services/StudentService';
 import Spinner from "../layout/Spiner";
 
@@ -34,19 +34,14 @@ const StudentDetail = () => {
                         <div className="card text-white bg-secondary mb-3 mx-auto mt-3" style={{ width: "30rem" }}>
                             <div className="card-header">Name: {name}</div>
                             <ul className="list-group list-group-flush">
-                                <li className="list-group-item">Gender: {gender}</li>
-                                <li className="list-group-item">Age: {age}</li>
-                                <li className="list-group-item">City: {city}</li>
-                                <li className="list-group-item">Mark: {mark}</li>
+                                <li className="list-group-item">{gender}</li>
+                                <li className="list-group-item">{age}</li>
+                                <li className="list-group-item">{city}</li>
+                                <li className="list-group-item">{mark}</li>
                             </ul>
 
                         </div>
-                        <div>
-                            <Link className="btn btn-outline-primary mt-5" to={'/'}>
-                                <i className="fa fa-arrow-left me-2" />
-                                Back to student list
-                            </Link>
-                        </div>
+                       
                     </div>
                 )}
             </section>

@@ -86,12 +86,7 @@ const CreateStudent = () => {
                             <button type="submit" className="btn btn-primary me-3">Save</button>
                             <button type="button" className="btn btn-danger" onClick={() => reset()}>Cancel</button>
                         </div>
-                        <div>
-                            <Link className="btn btn-outline-primary mt-5" to={'/'}>
-                                <i className="fa fa-arrow-left me-2" />
-                                Back to student list
-                            </Link>
-                        </div>
+                        
                     </form>
                 )}
             </div>

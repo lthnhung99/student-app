@@ -6,7 +6,6 @@ const LeftSideBar = () => {
             <li>List</li>
             <li>Create</li>
             <li>Edit</li>
-            <li>Detail</li>
         </ul>
     )
 }

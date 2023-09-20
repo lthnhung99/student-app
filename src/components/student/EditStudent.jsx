@@ -25,14 +25,14 @@ const studentSchema = yup.object({
         .typeError("Không hợp lệ")
 })
 const EditStudent = ({ studentList, setStudentList }) => {
+    const [studentEdit, setStudentEdit] = useState({})
+    const { studentId } = useParams()
+
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm({
         resolver: yupResolver(studentSchema),
+     
 
     })
-    const { studentId } = useParams()
-    const [studentEdit, setStudentEdit] = useState({})
-    const navigate = useNavigate()
-    const { name, gender, age, city, mark } = studentEdit
     useEffect(() => {
         try {
             async function getData() {
@@ -47,10 +47,7 @@ const EditStudent = ({ studentList, setStudentList }) => {
     const handleSave = async (values) => {
         try {
             await StudentService.updateStudent(studentId, values);
-            console.log("update", values);
             setStudentEdit(values);
-            alert("Cập nhật thành công!");
-            navigate("/");
         } catch (error) {
 
         }
@@ -63,41 +60,36 @@ const EditStudent = ({ studentList, setStudentList }) => {
                 <form onSubmit={handleSubmit(handleSave)} className="mx-3">
                     <div className="form-group mb-3">
                         <label className="lable-form">Name</label>
-                        <input type="text" className="form-control" {...register('name')} defaultValue={name} />
+                        <input type="text" className="form-control" {...register('name')} defaultValue={studentEdit.name}  />
                         <span className="text-danger">{errors?.name?.message}</span>
                     </div>
                     <div className="form-group mb-3">
                         <label className="lable-form">Gender</label>
-                        <select className="form-select" {...register('gender')} defaultValue={gender}>
+                        <select className="form-select" {...register('gender')} defaultValue={studentEdit.gender}>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
                     </div>
                     <div className="form-group mb-3">
                         <label className="lable-form">Age</label>
-                        <input type="number" className="form-control" {...register('age')} defaultValue={age} />
+                        <input type="number" className="form-control" {...register('age')} defaultValue={studentEdit.age} />
                         <span className="text-danger">{errors?.age?.message}</span>
                     </div>
                     <div className="form-group mb-3">
                         <label className="lable-form">City</label>
-                        <input type="text" className="form-control" {...register('city')} defaultValue={city} />
+                        <input type="text" className="form-control" {...register('city')} defaultValue={studentEdit.city}  />
                         <span className="text-danger">{errors?.city?.message}</span>
                     </div>
                     <div className="form-group mb-3">
                         <label className="lable-form">Mark</label>
-                        <input type="text" className="form-control" {...register('mark')} defaultValue={mark} />
+                        <input type="text" className="form-control" {...register('mark')} defaultValue={studentEdit.mark}/>
                         <span className="text-danger">{errors?.mark?.message}</span>
                     </div>
                     <div className="form-group mb-3">
                         <button type="submit" className="btn btn-primary me-3">Update</button>
-                        <button type="button" className="btn btn-danger" onClick={() => reset()}>Cancel</button>
+                        <button type="button" className="btn btn-danger">Cancel</button>
                     </div>
-                    <div>
-                        <Link className="btn btn-outline-primary mt-5" to={'/'}>
-                            <i className="fa fa-arrow-left me-2" />
-                            Back to student list
-                        </Link>
-                    </div>
+            
                 </form>
             </div>
         </div>
