@@ -8,14 +8,14 @@ import StudentList from "./components/student/StudentList";
 import StudentDetail from "./components/student/StudetnDetail ";
 import CreateStudent from "./components/student/CreateStudent";
 import EditStudent from "./components/student/EditStudent";
-
-import Layout from "./components/layout";
+import Navbar from "./components/layout/Navbar";
 
 function App() {
   return (
     <>
+    <Navbar/>
       <Routes>
-        <Route path="" element={<Layout />}>
+        
           <Route path="/" element={<StudentList />} />
           <Route
             path="/student/detail/:studentId"
@@ -23,7 +23,7 @@ function App() {
           />
           <Route path="/student/create/" element={<CreateStudent />} />
           <Route path="/student/edit/:studentId" element={<EditStudent />} />
-        </Route>
+        
       </Routes>
     </>
   );

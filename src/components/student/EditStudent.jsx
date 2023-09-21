@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import StudentService from "../../services/StudentService";
+import Swal from 'sweetalert2'
 
 const studentSchema = yup.object({
     name: yup.string()
@@ -27,10 +28,10 @@ const studentSchema = yup.object({
 const EditStudent = ({ studentList, setStudentList }) => {
     const [studentEdit, setStudentEdit] = useState({})
     const { studentId } = useParams()
-
+    const navigate = useNavigate()
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm({
         resolver: yupResolver(studentSchema),
-     
+        values: studentEdit
 
     })
     useEffect(() => {
@@ -47,11 +48,28 @@ const EditStudent = ({ studentList, setStudentList }) => {
     const handleSave = async (values) => {
         try {
             await StudentService.updateStudent(studentId, values);
+            console.log("update", values);
             setStudentEdit(values);
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Cập nhật thành công',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            navigate("/");
         } catch (error) {
 
         }
     };
+
+    // const handleUpdate = (student) => {
+    //     const newStudentList = studentList.filter(item => item.id === student.id);
+    //     setStudentList({
+    //         ...newStudentList,
+    //         student
+    //     })
+    // }
 
     return (
         <div className="container d-flex justify-content-center">
@@ -60,36 +78,41 @@ const EditStudent = ({ studentList, setStudentList }) => {
                 <form onSubmit={handleSubmit(handleSave)} className="mx-3">
                     <div className="form-group mb-3">
                         <label className="lable-form">Name</label>
-                        <input type="text" className="form-control" {...register('name')} defaultValue={studentEdit.name}  />
+                        <input type="text" className="form-control" {...register('name')}  />
                         <span className="text-danger">{errors?.name?.message}</span>
                     </div>
                     <div className="form-group mb-3">
                         <label className="lable-form">Gender</label>
-                        <select className="form-select" {...register('gender')} defaultValue={studentEdit.gender}>
+                        <select className="form-select" {...register('gender')}>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
                     </div>
                     <div className="form-group mb-3">
                         <label className="lable-form">Age</label>
-                        <input type="number" className="form-control" {...register('age')} defaultValue={studentEdit.age} />
+                        <input type="number" className="form-control" {...register('age')}  />
                         <span className="text-danger">{errors?.age?.message}</span>
                     </div>
                     <div className="form-group mb-3">
                         <label className="lable-form">City</label>
-                        <input type="text" className="form-control" {...register('city')} defaultValue={studentEdit.city}  />
+                        <input type="text" className="form-control" {...register('city')}  />
                         <span className="text-danger">{errors?.city?.message}</span>
                     </div>
                     <div className="form-group mb-3">
                         <label className="lable-form">Mark</label>
-                        <input type="text" className="form-control" {...register('mark')} defaultValue={studentEdit.mark}/>
+                        <input type="text" className="form-control" {...register('mark')} />
                         <span className="text-danger">{errors?.mark?.message}</span>
                     </div>
                     <div className="form-group mb-3">
                         <button type="submit" className="btn btn-primary me-3">Update</button>
-                        <button type="button" className="btn btn-danger">Cancel</button>
+                        <button type="button" className="btn btn-danger" onClick={() => reset()}>Cancel</button>
                     </div>
-            
+                    <div>
+                        <Link className="btn btn-outline-primary mt-5" to={'/'}>
+                            <i className="fa fa-arrow-left me-2" />
+                            Back to student list
+                        </Link>
+                    </div>
                 </form>
             </div>
         </div>

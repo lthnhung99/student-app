@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Spinner from './../layout/Spiner';
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2'
+import StudentService from "../../services/StudentService";
 const StudentList = () => {
     const [studentList, setStudentList] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
@@ -11,10 +13,10 @@ const StudentList = () => {
         try {
             setLoading(true)
             async function getPost() {
-                let response = await fetch(`https://js-post-api.herokuapp.com/api/students?_page=${currentPage}`)
-                let json = await response.json();
-                setStudentList(json.data);
-                setTotalPage(Math.ceil(Number(json.pagination._totalRows) / Number(json.pagination._limit)))
+                let response = await StudentService.getStudents(currentPage)
+                //let json = await response.json();
+                setStudentList(response.data.data);
+                setTotalPage(Math.ceil(Number(response.data.pagination._totalRows) / Number(response.data.pagination._limit)))
                 setLoading(false)
             }
             getPost();
@@ -44,14 +46,21 @@ const StudentList = () => {
         setAction('last')
     }
 
+  
+
     const handleRemove = async (studentRemove) => {
         let confirm = window.confirm(`Bạn có chắc chắn muốn xóa không?`);
         if (!confirm) return;
         try {
-            await fetch(`https://js-post-api.herokuapp.com/api/students/${studentRemove.id}`, {
-                method: 'DELETE'
-            });
+            await StudentService.deleteStudent(studentRemove.id)
             setStudentList((prevStudentList) => prevStudentList.filter((item) => item !== studentRemove));
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Xóa thành công',
+                showConfirmButton: false,
+                timer: 1500
+            })
         } catch (error) {
 
         }

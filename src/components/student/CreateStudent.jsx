@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Spinner from "../layout/Spiner";
+import Swal from 'sweetalert2'
+import StudentService from "../../services/StudentService";
 
 const studentSchema = yup.object({
     name: yup.string()
@@ -24,36 +26,38 @@ const studentSchema = yup.object({
         .typeError("Không hợp lệ")
 })
 const CreateStudent = () => {
+    const [studentCreate,setStudentCreate]= useState({})
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(studentSchema)
     })
 
-    const handleCreate = (data) => {
-        console.log(data);
-        postData("https://js-post-api.herokuapp.com/api/students", data)
-        alert('Thêm thành công')
-        reset()
-    }
-    async function postData(url, data) {
+    const createStudent = async (data) => {
         setLoading(true)
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-        setLoading(false)
-        return response.json();  
-    }
+        try {
+            await StudentService.postStudent(data)
+            setStudentCreate(data);
+            reset();
+            Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Thêm thành công',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
+            navigate("/")
+            setLoading(false)
+        } catch (error) {
 
+        }
+    }
     return (
         <div className="container d-flex justify-content-center">
             <div className="row col-6 md-6">
                 <h1>Form create</h1>
                 {loading ? <Spinner /> : (
-                    <form onSubmit={handleSubmit(handleCreate)} className="mx-3">
+                    <form onSubmit={handleSubmit(createStudent)} className="mx-3">
                         <div className="form-group mb-3">
                             <label className="lable-form">Name</label>
                             <input type="text" className="form-control" {...register('name')}/>
@@ -86,7 +90,12 @@ const CreateStudent = () => {
                             <button type="submit" className="btn btn-primary me-3">Save</button>
                             <button type="button" className="btn btn-danger" onClick={() => reset()}>Cancel</button>
                         </div>
-                        
+                        <div>
+                            <Link className="btn btn-outline-primary mt-5" to={'/'}>
+                                <i className="fa fa-arrow-left me-2" />
+                                Back to student list
+                            </Link>
+                        </div>
                     </form>
                 )}
             </div>
